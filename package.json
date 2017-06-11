@@ -1,0 +1,26 @@
+{
+  "name": "model-types",
+  "version": "1.0.0",
+  "description": "Javascript library for typed object modeling.",
+  "main": "build.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/7h3w4rd0c70r/model-types.git"
+  },
+  "keywords": [
+    "model",
+    "types",
+    "typed",
+    "model",
+    "modeling"
+  ],
+  "author": "Patrik Šimunič <patriksimunic@hotmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/7h3w4rd0c70r/model-types/issues"
+  },
+  "homepage": "https://github.com/7h3w4rd0c70r/model-types#readme"
+}
