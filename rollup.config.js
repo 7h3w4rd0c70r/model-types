@@ -1,16 +1,13 @@
 
-import resolve from 'rollup-plugin-node-resolve'
 import babel from 'rollup-plugin-babel'
 
 export default {
     entry: 'src/index.js',
+    dest: 'dist/model-types.js',
     format: 'cjs',
     plugins: [
-        resolve(),
         babel({
             exclude: 'node_modules/**'
         })
-    ],
-    dest: 'dist/model-types.js',
-    sourceMap: true
+    ]
 }
