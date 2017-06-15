@@ -3,7 +3,7 @@ layout: default
 title: JavaScript typed models
 ---
 
-# [](#header-1)Example
+# [](#example)Example
 ```javascript
 import { Types, model } from 'model-types'
 
@@ -19,9 +19,9 @@ const user = model({
 })
 ```
 
-# [](#header-1)API
+# [](#api)API
 ```javascript
 import * as ModelTypes from 'model-types'
 ```
-# [](#header-3)ModelTypes.model
+## [](#modeltypes-model)ModelTypes.model
 ModelTypes.model is a functions, that expects exactly one parameter - an object with model schema. ModelTypes.model returns created model of specified schema.
