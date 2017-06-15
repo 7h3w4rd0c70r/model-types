@@ -1,4 +1,5 @@
 ---
+layout: default
 title: JavaScript typed models
 ---
 
