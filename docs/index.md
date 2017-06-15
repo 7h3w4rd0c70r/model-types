@@ -26,5 +26,16 @@ import * as ModelTypes from 'model-types'
 ## [](#modeltypes-model)ModelTypes.model
 ModelTypes.model is a functions, that expects exactly one parameter - an object with model schema. ModelTypes.model returns an instance of model of specified schema.
 
-### []ModelTypes.model.value
-getter/setter for current value of 
+### []ModelTypes.model.getState
+function - returns an object, that represents the current state of model.
+```javascript
+const task = model({
+  title: String,
+  done: { Boolean, default: false }
+})
+
+task.set('title', 'My new task')
+
+console.log(task.getState())
+// Prints: { title: 'My new task', done: false  }
+```
