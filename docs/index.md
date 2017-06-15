@@ -23,11 +23,15 @@ const user = model({
 ```javascript
 import * as ModelTypes from 'model-types'
 ```
-## [](#api-model)ModelTypes.model
-ModelTypes.model is a functions, that expects exactly one parameter - an object with model schema. ModelTypes.model returns an instance of model of specified schema.
+## [](#api-model)ModelTypes#model
+type: function
+expects: modelSchema /object/
+returns: modelinstance
 
-### [](#api-model-getstate)ModelTypes.model.getState
-function - returns an object, that represents the current state of model.
+### [](#api-model-getstate)model.getState
+type: function
+expects: undefined
+returns: object
 ```javascript
 const task = model({
   title: String,
