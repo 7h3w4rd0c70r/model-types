@@ -12,7 +12,7 @@ const user = model({
   age: Number,
   oldEnough: Boolean,
   home: {
-    adress: { type: String, default: '' },
+    address: { type: String, default: '' },
     city: String
   },
   notes: Types.Mixed
