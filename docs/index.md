@@ -20,7 +20,8 @@ const user = model({
 ```
 
 # [](#header-1)API
-
-# [](#header-2)model
-model is a functions, that expects exactly one parameter - an object with model schema
-model returns created model of specified schema
+```javascript
+import * as ModelTypes from 'model-types'
+```
+# [](#header-2)ModelTypes.model
+ModelTypes.model is a functions, that expects exactly one parameter - an object with model schema. ModelTypes.model returns created model of specified schema.
