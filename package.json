@@ -3,6 +3,7 @@
   "version": "1.2.0",
   "description": "Javascript library for typed object modeling.",
   "main": "./dist/model-types.js",
+  "module": "./dist/model-types.js",
   "scripts": {
     "build": "rollup -c"
   },
