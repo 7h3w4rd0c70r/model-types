@@ -175,7 +175,7 @@ var StringType = function (_DataType) {
         _this._value = _this._default;
 
 
-        if (args.default || args.default === null) {
+        if (args.default !== undefined) {
             if (typeof args.default === 'string' || args.default === null) {
                 _this._default = args.default;
             } else {
@@ -220,7 +220,7 @@ var NumberType = function (_DataType2) {
         _this2._value = _this2._default;
 
 
-        if (args.default || args.default === null) {
+        if (args.default !== undefined) {
             if (typeof args.default === 'number' || args.default === null) {
                 _this2._default = args.default;
             } else {
@@ -267,7 +267,7 @@ var BooleanType = function (_DataType3) {
         _this3._value = _this3._default;
 
 
-        if (args.default || args.default === null) {
+        if (args.default !== undefined) {
             if (args.default === null || args.default === false || args.default === true) {
                 _this3._default = args.default;
             } else {
@@ -324,7 +324,7 @@ var ArrayType = function (_DataType4) {
             _this4._arraytype = new MixedType();
         }
 
-        if (args.default || args.default === null) {
+        if (args.default !== undefined) {
             if (args.default instanceof Array || args.default === null) {
                 _this4._default = _this4.parse(args.default);
             } else {
@@ -369,7 +369,9 @@ var DateType = function (_DataType5) {
         _this5._default = _this5._null ? null : new Date();
 
 
-        _this5._default = _this5.parse(args.default);
+        if (args.default !== undefined) {
+            _this5._default = _this5.parse(args.default);
+        }
 
         _this5._value = _this5._default;
         return _this5;
@@ -415,7 +417,9 @@ var MixedType = function (_DataType6) {
         _this6._default = _this6._null ? null : {};
 
 
-        _this6._default = _this6.parse(args.default);
+        if (args.default !== undefined) {
+            _this6._default = _this6.parse(args.default);
+        }
 
         _this6._value = _this6._default;
         return _this6;
@@ -462,7 +466,9 @@ var EnumType = function (_DataType7) {
         });
         _this7._enums = enums;
 
-        _this7._default = _this7.parse(args.default);
+        if (args.default !== undefined) {
+            _this7._default = _this7.parse(args.default);
+        }
 
         _this7._value = _this7._default;
         return _this7;

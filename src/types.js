@@ -54,7 +54,7 @@ export class StringType extends DataType {
     constructor(args = { }) {
         super(args)
 
-        if (args.default || args.default === null) {
+        if (args.default !== undefined) {
             if (typeof args.default === 'string' || args.default === null) {
                 this._default = args.default
             } else {
@@ -87,7 +87,7 @@ export class NumberType extends DataType {
     constructor(args = { }) {
         super(args)
 
-        if (args.default || args.default === null) {
+        if (args.default !== undefined) {
             if (typeof args.default === 'number' || args.default === null) {
                 this._default = args.default
             } else {
@@ -122,7 +122,7 @@ export class BooleanType extends DataType {
     constructor(args = { }) {
         super(args)
 
-        if (args.default || args.default === null) {
+        if (args.default !== undefined) {
             if (args.default === null || args.default === false || args.default === true) {
                 this._default = args.default
             } else {
@@ -176,7 +176,7 @@ export class ArrayType extends DataType {
             this._arraytype = new MixedType()
         }
 
-        if (args.default || args.default === null) {
+        if (args.default !== undefined) {
             if (args.default instanceof Array || args.default === null) {
                 this._default = this.parse(args.default)
             } else {
@@ -210,7 +210,9 @@ export class DateType extends DataType {
     constructor(args = { }) {
         super(args)
 
-        this._default = this.parse(args.default)
+        if (args.default !== undefined) {
+            this._default = this.parse(args.default)
+        }
 
         this._value = this._default
     }
@@ -244,7 +246,9 @@ export class MixedType extends DataType {
     constructor(args = { }) {
         super(args)
 
-        this._default = this.parse(args.default)
+        if (args.default !== undefined) {
+            this._default = this.parse(args.default)
+        }
 
         this._value = this._default
     }
@@ -280,7 +284,9 @@ export class EnumType extends DataType {
         })
         this._enums = enums
 
-        this._default = this.parse(args.default)
+        if (args.default !== undefined) {
+            this._default = this.parse(args.default)
+        }
 
         this._value = this._default
     }
