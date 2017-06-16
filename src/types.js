@@ -36,6 +36,14 @@ class DataType {
     set value(value) {
         this._value = this.parse(value)
     }
+
+    get default() {
+        return this._default
+    }
+
+    set default(value) {
+        throw new Error('Cannot set default value after initialization')
+    }
 }
 
 export class StringType extends DataType {
@@ -185,8 +193,9 @@ export class ArrayType extends DataType {
             throw new Error('ArrayType.parseArray expects an array')
         const parsed = [ ]
         for (let i in unparsed) {
-
+            parsed.push(this._arraytype.parse(unparsed[i]))
         }
+        return parsed
     }
 
     validate(value) {
@@ -258,11 +267,13 @@ export class EnumType extends DataType {
         super(args)
 
         const enums = args.enums
-        if (!(enums instanceof Array) || enums.length == 0)
+        if (!(enums instanceof Array) || enums.length == 0) {
             throw new Error('Enum constructor expects an array of at least one emun (strings/numbers)')
+        }
         const type = typeof enums[0]
-        if (type !== 'string' || type !== 'number')
+        if (type !== 'string' && type !== 'number') {
             throw new Error('Enum value expects a string or a number, but got ' + type)
+        }
         enums.map(en => {
             if (type !== typeof en)
                 throw new Error('All enum values must be the same type, either strings or numbers')
@@ -277,7 +288,11 @@ export class EnumType extends DataType {
     parse(unparsed) {
         unparsed = super.parse(unparsed)
         if (unparsed === undefined) {
-            return this._enums[0]
+            if (this._null === false) {
+                return this._enums[0]
+            } else {
+                return null
+            }
         } else if (this._enums.indexOf(unparsed) == -1) {
             throw new Error('Value ' + unparsed + ' is not an enum.')
         } else {

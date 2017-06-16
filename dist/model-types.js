@@ -146,6 +146,14 @@ var DataType = function () {
         set: function set$$1(value) {
             this._value = this.parse(value);
         }
+    }, {
+        key: 'default',
+        get: function get$$1() {
+            return this._default;
+        },
+        set: function set$$1(value) {
+            throw new Error('Cannot set default value after initialization');
+        }
     }]);
     return DataType;
 }();
@@ -334,7 +342,10 @@ var ArrayType = function (_DataType4) {
             unparsed = get(ArrayType.prototype.__proto__ || Object.getPrototypeOf(ArrayType.prototype), 'parse', this).call(this, unparsed);
             if (!(unparsed instanceof Array)) throw new Error('ArrayType.parseArray expects an array');
             var parsed = [];
-            for (var i in unparsed) {}
+            for (var i in unparsed) {
+                parsed.push(this._arraytype.parse(unparsed[i]));
+            }
+            return parsed;
         }
     }, {
         key: 'validate',
@@ -439,9 +450,13 @@ var EnumType = function (_DataType7) {
 
 
         var enums = args.enums;
-        if (!(enums instanceof Array) || enums.length == 0) throw new Error('Enum constructor expects an array of at least one emun (strings/numbers)');
+        if (!(enums instanceof Array) || enums.length == 0) {
+            throw new Error('Enum constructor expects an array of at least one emun (strings/numbers)');
+        }
         var type = _typeof(enums[0]);
-        if (type !== 'string' || type !== 'number') throw new Error('Enum value expects a string or a number, but got ' + type);
+        if (type !== 'string' && type !== 'number') {
+            throw new Error('Enum value expects a string or a number, but got ' + type);
+        }
         enums.map(function (en) {
             if (type !== (typeof en === 'undefined' ? 'undefined' : _typeof(en))) throw new Error('All enum values must be the same type, either strings or numbers');
         });
@@ -458,7 +473,11 @@ var EnumType = function (_DataType7) {
         value: function parse(unparsed) {
             unparsed = get(EnumType.prototype.__proto__ || Object.getPrototypeOf(EnumType.prototype), 'parse', this).call(this, unparsed);
             if (unparsed === undefined) {
-                return this._enums[0];
+                if (this._null === false) {
+                    return this._enums[0];
+                } else {
+                    return null;
+                }
             } else if (this._enums.indexOf(unparsed) == -1) {
                 throw new Error('Value ' + unparsed + ' is not an enum.');
             } else {
@@ -489,14 +508,50 @@ function parseSchema(obj) {
     for (var i in obj) {
         if (typeof obj[i] === 'string') {
             var type = obj[i].toLowerCase();
-            if (type === 'string') parsed[i] = new Types.String();else if (type === 'number') parsed[i] = new Types.Number();else if (type === 'boolean' || type === 'bool') parsed[i] = new Types.Boolean();else if (type === 'date') parsed[i] = new Types.Date();else if (type === 'array') parsed[i] = new Types.Array();else if (type === 'mixed' || type === 'any') parsed[i] = new Types.Mixed();
+            if (type === 'string') {
+                parsed[i] = new Types.String();
+            } else if (type === 'number') {
+                parsed[i] = new Types.Number();
+            } else if (type === 'boolean' || type === 'bool') {
+                parsed[i] = new Types.Boolean();
+            } else if (type === 'date') {
+                parsed[i] = new Types.Date();
+            } else if (type === 'array') {
+                parsed[i] = new Types.Array();
+            } else if (type === 'mixed' || type === 'any') {
+                parsed[i] = new Types.Mixed();
+            }
         } else if (typeof obj[i] === 'function') {
-            if (obj[i].__type === 'DataType') parsed[i] = new obj[i]();else if (obj[i].name == 'String') parsed[i] = new Types.String();else if (obj[i].name === 'Number') parsed[i] = new Types.Number();else if (obj[i].name === 'Boolean') parsed[i] = new Types.Boolean();else if (obj[i].name === 'Date') parsed[i] = new Types.Date();else if (obj[i].name === 'Array') parsed[i] = new Types.Array();else throw new Error('Invalid function used as type in model schema.');
+            if (obj[i].__type === 'DataType') {
+                parsed[i] = new obj[i]();
+            } else if (obj[i].name == 'String') {
+                parsed[i] = new Types.String();
+            } else if (obj[i].name === 'Number') {
+                parsed[i] = new Types.Number();
+            } else if (obj[i].name === 'Boolean') {
+                parsed[i] = new Types.Boolean();
+            } else if (obj[i].name === 'Date') {
+                parsed[i] = new Types.Date();
+            } else if (obj[i].name === 'Array') {
+                parsed[i] = new Types.Array();
+            } else {
+                throw new Error('Invalid function used as type in model schema.');
+            }
         } else if (obj[i].__type === 'datatype') {
             parsed[i] = obj[i];
+        } else if (obj[i] instanceof Array) {
+            if (obj[i].length == 0) {
+                parsed[i] = new Types.Array();
+            } else if (obj[i].length == 1) {
+                parsed[i] = new Types.Array({ arraytype: obj[i][0] });
+            } else {
+                parsed[i] = new Types.Enum({ enums: obj[i] });
+            }
         } else if (obj[i] instanceof Object) {
             if (obj[i].type) {
-                if (typeof obj[i].type === 'string') {
+                if (obj[i].__type === 'datatype') {
+                    parsed[i] = obj[i];
+                } else if (typeof obj[i].type === 'string') {
                     var _type = obj[i].type.toLowerCase();
                     if (_type === 'string') {
                         parsed[i] = new Types.String(obj[i]);
@@ -510,31 +565,31 @@ function parseSchema(obj) {
                         parsed[i] = new Types.Array(obj[i]);
                     } else if (_type === 'mixed' || _type === 'any') {
                         parsed[i] = new Types.Mixed(obj[i]);
+                    } else if (_type === 'enum') {
+                        parsed[i] = new Types.Enum(obj[i]);
                     }
                 } else if (typeof obj[i].type === 'function') {
-                    var _type2 = obj[i].name;
-                    if (_type2 === 'string') {
-                        parsed[i] = new Types.String();
-                    } else if (_type2 === 'number') {
-                        parsed[i] = new Types.Number();
-                    } else if (_type2 === 'boolean') {
-                        parsed[i] = new Types.Boolean();
-                    } else if (_type2 === 'date') {
-                        parsed[i] = new Types.Date();
+                    var _type2 = obj[i].type.name;
+                    if (obj[i].type.__type === 'DataType') {
+                        parsed[i] = new obj[i].type(obj[i]);
+                    } else if (_type2 === 'String') {
+                        parsed[i] = new Types.String(obj[i]);
+                    } else if (_type2 === 'Number') {
+                        parsed[i] = new Types.Number(obj[i]);
+                    } else if (_type2 === 'Boolean') {
+                        parsed[i] = new Types.Boolean(obj[i]);
+                    } else if (_type2 === 'Array') {
+                        parsed[i] = new Types.Array(obj[i]);
+                    } else if (_type2 === 'Date') {
+                        parsed[i] = new Types.Date(obj[i]);
                     } else if (obj[i] instanceof Array) {
-                        parsed[i] = new Types.Array();
+                        parsed[i] = new Types.Array(obj[i]);
                     }
+                } else {
+                    parsed[i] = parseSchema(obj[i]);
                 }
             } else {
                 parsed[i] = parseSchema(obj[i]);
-            }
-        } else if (obj[i] instanceof Array) {
-            if (obj[i].length == 0) {
-                parsed[i] = new Types.Array();
-            } else if (obj[i].length == 1) {
-                parsed[i] = new Types.Array(obj[i][0]);
-            } else {
-                parsed[i] = new Types.Enum({ enums: obj[i] });
             }
         } else {
             throw new Error('Could not parse model schema.');
@@ -543,13 +598,102 @@ function parseSchema(obj) {
     return parsed;
 }
 
-var Model = function Model(schema) {
-    classCallCheck(this, Model);
-    this._schema = null;
+function _parse(schema, state) {
+    var parsed = {};
+    if (!(state instanceof Object)) {
+        throw new Error('model.parse expects a valid object');
+    }
+    for (var i in state) {
+        if (schema[i]) {
+            if (state[i] instanceof Object) {
+                parsed[i] = _parse(schema[i], state[i]);
+            } else {
+                parsed[i] = schema[i].parse(state[i]);
+            }
+        }
+    }
+    for (var _i in schema) {
+        if (parsed[_i] === undefined) {
+            if (schema[_i].__type === 'datatype') {
+                parsed[_i] = schema[_i].default;
+            } else if (schema[_i] instanceof Object) {
+                parsed[_i] = _parse(schema[_i], {});
+            }
+        }
+    }
+    return parsed;
+}
 
-    if (!(schema instanceof Object)) throw new Error('Model expects a schema to be an object');
-    this._schema = parseSchema(schema);
-};
+function setter(obj, fields, value) {
+    var updated = Object.assign({}, obj);
+    if (fields.length == 1) {
+        updated[fields[0]] = value;
+    } else {
+        updated[fields[0]] = setter(updated[fields[0]], fields.slice(1), value);
+    }
+    return updated;
+}
+
+function createInitialState(schema) {
+    var state = {};
+    if (!(schema instanceof Object)) {
+        throw new Error('createInitialState(schema) expects a valid object');
+    }
+    for (var i in schema) {
+        if (schema[i].__type === 'datatype') {
+            state[i] = schema[i].default;
+        } else if (schema[i] instanceof Object) {
+            state[i] = createInitialState(schema[i]);
+        } else {
+            throw new Error('Invalid propetry in model._schema');
+        }
+    }
+    return state;
+}
+
+var Model = function () {
+    function Model(schema) {
+        classCallCheck(this, Model);
+        this._schema = {};
+        this._initialState = null;
+        this._state = this._initialState;
+
+        if (!(schema instanceof Object)) throw new Error('Model expects a schema to be an object');
+        this._schema = parseSchema(schema);
+        this._state = createInitialState(this._schema);
+    }
+
+    createClass(Model, [{
+        key: 'set',
+        value: function set$$1(field, value) {
+            var fields = String(field).split('.');
+            this._state = setter(this._state, fields, value);
+        }
+    }, {
+        key: 'get',
+        value: function get$$1(field) {
+            return String(field).split('.').reduce(function (o, i) {
+                return o[i];
+            }, this._state);
+        }
+    }, {
+        key: 'setState',
+        value: function setState(state) {
+            this._state = this.parse(state);
+        }
+    }, {
+        key: 'getState',
+        value: function getState() {
+            return this._state;
+        }
+    }, {
+        key: 'parse',
+        value: function parse(state) {
+            return _parse(this._schema, state);
+        }
+    }]);
+    return Model;
+}();
 
 function model(schema) {
     return new Model(schema);

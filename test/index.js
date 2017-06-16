@@ -8,7 +8,13 @@ const model = Model({
         address: String,
         city: String
     },
-    admin: Boolean
+    admin: Boolean,
+    role: {
+        type: 'enum',
+        enums: ['admin','user'],
+        default: 'user',
+        null: false
+    }
 })
 
-console.log(model._schema.name.value)
+console.log(model.getState())
