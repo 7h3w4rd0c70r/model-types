@@ -154,6 +154,14 @@ class Model {
     _initialState = null
     _state = this._initialState
 
+    get state() {
+        return this.getState()
+    }
+
+    set state(state) {
+        this.setState(state)
+    }
+
     constructor(schema) {
         if (!(schema instanceof Object))
             throw new Error('Model expects a schema to be an object')
