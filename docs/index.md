@@ -23,23 +23,38 @@ const user = model({
 ```javascript
 import * as ModelTypes from 'model-types'
 ```
-## [](#api-model)ModelTypes#model
-type: function
-expects: modelSchema /object/
-returns: modelinstance
-
-### [](#api-model-getstate)model.getState
-type: function
-expects: undefined
-returns: object
+## [](#api-model)ModelTypes#model(_schema_)
+type: _function_
+expects: _object_
+returns: _model_
 ```javascript
 const task = model({
-  title: String,
-  done: { Boolean, default: false }
+  title: {
+    type: String,
+    default: ''
+  },
+  content: String,
+  done: {
+    type: Boolean,
+    default: false
+  }
 })
+```
 
-task.set('title', 'My new task')
+### [](#api-model-getstate)model.getState
+type: _function_
+expects: _undefined_
+returns: _object_
+```javascript
 
 console.log(task.getState())
-// Prints: { title: 'My new task', done: false  }
+// prints: { title: '', content: null, done: false }
+```
+
+### [](#api-model-setstate)model.setState
+type: _function_
+expects: _object_
+returns: _undefined_
+```javascript
+
 ```

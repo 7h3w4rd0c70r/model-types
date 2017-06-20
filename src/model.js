@@ -103,7 +103,7 @@ function parse(schema, state) {
     }
     for (let i in state) {
         if (schema[i]) {
-            if (state[i] instanceof Object) {
+            if (state[i] instanceof Object && !(state[i] instanceof Array) && !(state[i] instanceof Date) && !(state[i] instanceof RegExp)) {
                 parsed[i] = parse(schema[i], state[i])
             } else {
                 parsed[i] = schema[i].parse(state[i])

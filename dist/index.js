@@ -611,7 +611,7 @@ function _parse(schema, state) {
     }
     for (var i in state) {
         if (schema[i]) {
-            if (state[i] instanceof Object) {
+            if (state[i] instanceof Object && !(state[i] instanceof Array) && !(state[i] instanceof Date) && !(state[i] instanceof RegExp)) {
                 parsed[i] = _parse(schema[i], state[i]);
             } else {
                 parsed[i] = schema[i].parse(state[i]);
@@ -658,6 +658,16 @@ function createInitialState(schema) {
 }
 
 var Model = function () {
+    createClass(Model, [{
+        key: 'state',
+        get: function get$$1() {
+            return this.getState();
+        },
+        set: function set$$1(state) {
+            this.setState(state);
+        }
+    }]);
+
     function Model(schema) {
         classCallCheck(this, Model);
         this._schema = {};
