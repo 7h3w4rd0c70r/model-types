@@ -175,7 +175,15 @@ class Model {
     }
 
     get(field) {
-        return String(field).split('.').reduce((o, i) => o[i], this._state)
+        try {
+            return (
+                String(field)
+                .split('.')
+                .reduce((o, i) => o[i], this._state)
+            )
+        } catch (ex) {
+            return undefined
+        }
     }
 
     setState(state) {

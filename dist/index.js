@@ -688,9 +688,13 @@ var Model = function () {
     }, {
         key: 'get',
         value: function get$$1(field) {
-            return String(field).split('.').reduce(function (o, i) {
-                return o[i];
-            }, this._state);
+            try {
+                return String(field).split('.').reduce(function (o, i) {
+                    return o[i];
+                }, this._state);
+            } catch (ex) {
+                return undefined;
+            }
         }
     }, {
         key: 'setState',
