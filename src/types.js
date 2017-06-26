@@ -46,6 +46,43 @@ class DataType {
     }
 }
 
+export class ObjectId extends DataType {
+    _name = 'ObjectId'
+    _default = this._null ? null : ''
+    _value = this._default
+
+    constructor(args = { }) {
+        super(args)
+
+        if (args.default !== undefined) {
+            if (this.validate(args.default)) {
+                this._default = args.default
+            } else {
+                throw new Error('Invalid default value for StringType. Expected string, but got ' + typeof args.default)
+            }
+        }
+
+        this._value = this._default
+    }
+
+    parse(unparsed) {
+        unparsed = super.parse(unparsed)
+        if (unparsed === undefined) {
+            return this._default
+        } else {
+            if (typeof unparsed === 'number') {
+                return unparsed
+            } else {
+                return String(unparsed)
+            }
+        }
+    }
+
+    validate(value) {
+        return super.validate(value) ? (value === null || typeof value === 'string' || typeof value === 'number' ? true : false) : false
+    }
+}
+
 export class StringType extends DataType {
     _name = 'String'
     _default = this._null ? null : ''
@@ -55,7 +92,7 @@ export class StringType extends DataType {
         super(args)
 
         if (args.default !== undefined) {
-            if (typeof args.default === 'string' || args.default === null) {
+            if (this.validate(args.default)) {
                 this._default = args.default
             } else {
                 throw new Error('Invalid default value for StringType. Expected string, but got ' + typeof args.default)
@@ -312,6 +349,7 @@ export class EnumType extends DataType {
 }
 
 export default {
+    ObjectId: ObjectId,
     String: StringType,
     Number: NumberType,
     Boolean: BooleanType,
