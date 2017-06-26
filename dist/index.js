@@ -161,22 +161,22 @@ var DataType = function () {
 DataType.__type = 'DataType';
 
 
-var StringType = function (_DataType) {
-    inherits(StringType, _DataType);
+var ObjectId = function (_DataType) {
+    inherits(ObjectId, _DataType);
 
-    function StringType() {
+    function ObjectId() {
         var args = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-        classCallCheck(this, StringType);
+        classCallCheck(this, ObjectId);
 
-        var _this = possibleConstructorReturn(this, (StringType.__proto__ || Object.getPrototypeOf(StringType)).call(this, args));
+        var _this = possibleConstructorReturn(this, (ObjectId.__proto__ || Object.getPrototypeOf(ObjectId)).call(this, args));
 
-        _this._name = 'String';
+        _this._name = 'ObjectId';
         _this._default = _this._null ? null : '';
         _this._value = _this._default;
 
 
         if (args.default !== undefined) {
-            if (typeof args.default === 'string' || args.default === null) {
+            if (_this.validate(args.default)) {
                 _this._default = args.default;
             } else {
                 throw new Error('Invalid default value for StringType. Expected string, but got ' + _typeof(args.default));
@@ -185,6 +185,55 @@ var StringType = function (_DataType) {
 
         _this._value = _this._default;
         return _this;
+    }
+
+    createClass(ObjectId, [{
+        key: 'parse',
+        value: function parse(unparsed) {
+            unparsed = get(ObjectId.prototype.__proto__ || Object.getPrototypeOf(ObjectId.prototype), 'parse', this).call(this, unparsed);
+            if (unparsed === undefined) {
+                return this._default;
+            } else {
+                if (typeof unparsed === 'number') {
+                    return unparsed;
+                } else {
+                    return String(unparsed);
+                }
+            }
+        }
+    }, {
+        key: 'validate',
+        value: function validate(value) {
+            return get(ObjectId.prototype.__proto__ || Object.getPrototypeOf(ObjectId.prototype), 'validate', this).call(this, value) ? value === null || typeof value === 'string' || typeof value === 'number' ? true : false : false;
+        }
+    }]);
+    return ObjectId;
+}(DataType);
+
+var StringType = function (_DataType2) {
+    inherits(StringType, _DataType2);
+
+    function StringType() {
+        var args = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+        classCallCheck(this, StringType);
+
+        var _this2 = possibleConstructorReturn(this, (StringType.__proto__ || Object.getPrototypeOf(StringType)).call(this, args));
+
+        _this2._name = 'String';
+        _this2._default = _this2._null ? null : '';
+        _this2._value = _this2._default;
+
+
+        if (args.default !== undefined) {
+            if (_this2.validate(args.default)) {
+                _this2._default = args.default;
+            } else {
+                throw new Error('Invalid default value for StringType. Expected string, but got ' + _typeof(args.default));
+            }
+        }
+
+        _this2._value = _this2._default;
+        return _this2;
     }
 
     createClass(StringType, [{
@@ -206,30 +255,30 @@ var StringType = function (_DataType) {
     return StringType;
 }(DataType);
 
-var NumberType = function (_DataType2) {
-    inherits(NumberType, _DataType2);
+var NumberType = function (_DataType3) {
+    inherits(NumberType, _DataType3);
 
     function NumberType() {
         var args = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
         classCallCheck(this, NumberType);
 
-        var _this2 = possibleConstructorReturn(this, (NumberType.__proto__ || Object.getPrototypeOf(NumberType)).call(this, args));
+        var _this3 = possibleConstructorReturn(this, (NumberType.__proto__ || Object.getPrototypeOf(NumberType)).call(this, args));
 
-        _this2._name = 'Number';
-        _this2._default = _this2._null ? null : 0;
-        _this2._value = _this2._default;
+        _this3._name = 'Number';
+        _this3._default = _this3._null ? null : 0;
+        _this3._value = _this3._default;
 
 
         if (args.default !== undefined) {
             if (typeof args.default === 'number' || args.default === null) {
-                _this2._default = args.default;
+                _this3._default = args.default;
             } else {
                 throw new Error('Invalid default value for NumberType. Expected number (or null, if notnull), but got ' + _typeof(args.default));
             }
         }
 
-        _this2._value = _this2._default;
-        return _this2;
+        _this3._value = _this3._default;
+        return _this3;
     }
 
     createClass(NumberType, [{
@@ -253,30 +302,30 @@ var NumberType = function (_DataType2) {
     return NumberType;
 }(DataType);
 
-var BooleanType = function (_DataType3) {
-    inherits(BooleanType, _DataType3);
+var BooleanType = function (_DataType4) {
+    inherits(BooleanType, _DataType4);
 
     function BooleanType() {
         var args = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
         classCallCheck(this, BooleanType);
 
-        var _this3 = possibleConstructorReturn(this, (BooleanType.__proto__ || Object.getPrototypeOf(BooleanType)).call(this, args));
+        var _this4 = possibleConstructorReturn(this, (BooleanType.__proto__ || Object.getPrototypeOf(BooleanType)).call(this, args));
 
-        _this3._name = 'Boolean';
-        _this3._default = _this3._null ? null : false;
-        _this3._value = _this3._default;
+        _this4._name = 'Boolean';
+        _this4._default = _this4._null ? null : false;
+        _this4._value = _this4._default;
 
 
         if (args.default !== undefined) {
             if (args.default === null || args.default === false || args.default === true) {
-                _this3._default = args.default;
+                _this4._default = args.default;
             } else {
                 throw new Error('Invalid default value for BooleanType. Expected boolean (or null, if notnull), but got ' + _typeof(args.default));
             }
         }
 
-        _this3._value = _this3._default;
-        return _this3;
+        _this4._value = _this4._default;
+        return _this4;
     }
 
     createClass(BooleanType, [{
@@ -298,42 +347,42 @@ var BooleanType = function (_DataType3) {
     return BooleanType;
 }(DataType);
 
-var ArrayType = function (_DataType4) {
-    inherits(ArrayType, _DataType4);
+var ArrayType = function (_DataType5) {
+    inherits(ArrayType, _DataType5);
 
     function ArrayType() {
         var args = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
         classCallCheck(this, ArrayType);
 
-        var _this4 = possibleConstructorReturn(this, (ArrayType.__proto__ || Object.getPrototypeOf(ArrayType)).call(this, args));
+        var _this5 = possibleConstructorReturn(this, (ArrayType.__proto__ || Object.getPrototypeOf(ArrayType)).call(this, args));
 
-        _this4._name = 'Array';
-        _this4._arraytype = null;
+        _this5._name = 'Array';
+        _this5._arraytype = null;
 
 
         if (args.arraytype) {
             if (typeof args.arraytype === 'string') {
                 var type = args.arraytype.toLowerCase();
-                if (type === 'string') _this4._arraytype = new StringType();else if (type === 'number') _this4._arraytype = new NumberType();else if (type === 'boolean' || type === 'bool') _this4._arraytype = new BooleanType();else if (type === 'date') _this4._arraytype = new DateType();else if (type === 'mixed' || type === 'any') _this4._arraytype = new MixedType();else throw new Error('Invalid string used as arraytype');
+                if (type === 'string') _this5._arraytype = new StringType();else if (type === 'number') _this5._arraytype = new NumberType();else if (type === 'boolean' || type === 'bool') _this5._arraytype = new BooleanType();else if (type === 'date') _this5._arraytype = new DateType();else if (type === 'mixed' || type === 'any') _this5._arraytype = new MixedType();else throw new Error('Invalid string used as arraytype');
             } else if (typeof args.arraytype === 'function') {
-                if (args.arraytype.name === 'String') _this4._arraytype = new StringType();else if (args.arraytype.name === 'Number') _this4._arraytype = new NumberType();else if (args.arraytype.name === 'Date') _this4._arraytype = new DateType();else if (args.arraytype.name === 'Boolean') _this4._arraytype = new BooleanType();else throw new Error('Invalid function used as arraytype');
+                if (args.arraytype.name === 'String') _this5._arraytype = new StringType();else if (args.arraytype.name === 'Number') _this5._arraytype = new NumberType();else if (args.arraytype.name === 'Date') _this5._arraytype = new DateType();else if (args.arraytype.name === 'Boolean') _this5._arraytype = new BooleanType();else throw new Error('Invalid function used as arraytype');
             } else {
                 throw new Error('Invalid arraytype passed to ArrayType arguments. Expected function (String, Number, Date or Boolean), string or DataType, but got ' + args.arraytype);
             }
         } else {
-            _this4._arraytype = new MixedType();
+            _this5._arraytype = new MixedType();
         }
 
         if (args.default !== undefined) {
             if (args.default instanceof Array || args.default === null) {
-                _this4._default = _this4.parse(args.default);
+                _this5._default = _this5.parse(args.default);
             } else {
                 throw new Error('Invalid default value for ArrayType. Expected array (or null, if notnull), but got ' + _typeof(args.default));
             }
         }
 
-        _this4._value = _this4._default;
-        return _this4;
+        _this5._value = _this5._default;
+        return _this5;
     }
 
     createClass(ArrayType, [{
@@ -356,25 +405,25 @@ var ArrayType = function (_DataType4) {
     return ArrayType;
 }(DataType);
 
-var DateType = function (_DataType5) {
-    inherits(DateType, _DataType5);
+var DateType = function (_DataType6) {
+    inherits(DateType, _DataType6);
 
     function DateType() {
         var args = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
         classCallCheck(this, DateType);
 
-        var _this5 = possibleConstructorReturn(this, (DateType.__proto__ || Object.getPrototypeOf(DateType)).call(this, args));
+        var _this6 = possibleConstructorReturn(this, (DateType.__proto__ || Object.getPrototypeOf(DateType)).call(this, args));
 
-        _this5._name = 'Date';
-        _this5._default = _this5._null ? null : new Date();
+        _this6._name = 'Date';
+        _this6._default = _this6._null ? null : new Date();
 
 
         if (args.default !== undefined) {
-            _this5._default = _this5.parse(args.default);
+            _this6._default = _this6.parse(args.default);
         }
 
-        _this5._value = _this5._default;
-        return _this5;
+        _this6._value = _this6._default;
+        return _this6;
     }
 
     createClass(DateType, [{
@@ -404,25 +453,25 @@ var DateType = function (_DataType5) {
     return DateType;
 }(DataType);
 
-var MixedType = function (_DataType6) {
-    inherits(MixedType, _DataType6);
+var MixedType = function (_DataType7) {
+    inherits(MixedType, _DataType7);
 
     function MixedType() {
         var args = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
         classCallCheck(this, MixedType);
 
-        var _this6 = possibleConstructorReturn(this, (MixedType.__proto__ || Object.getPrototypeOf(MixedType)).call(this, args));
+        var _this7 = possibleConstructorReturn(this, (MixedType.__proto__ || Object.getPrototypeOf(MixedType)).call(this, args));
 
-        _this6._name = 'Mixed';
-        _this6._default = _this6._null ? null : {};
+        _this7._name = 'Mixed';
+        _this7._default = _this7._null ? null : {};
 
 
         if (args.default !== undefined) {
-            _this6._default = _this6.parse(args.default);
+            _this7._default = _this7.parse(args.default);
         }
 
-        _this6._value = _this6._default;
-        return _this6;
+        _this7._value = _this7._default;
+        return _this7;
     }
 
     createClass(MixedType, [{
@@ -440,17 +489,17 @@ var MixedType = function (_DataType6) {
     return MixedType;
 }(DataType);
 
-var EnumType = function (_DataType7) {
-    inherits(EnumType, _DataType7);
+var EnumType = function (_DataType8) {
+    inherits(EnumType, _DataType8);
 
     function EnumType() {
         var args = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
         classCallCheck(this, EnumType);
 
-        var _this7 = possibleConstructorReturn(this, (EnumType.__proto__ || Object.getPrototypeOf(EnumType)).call(this, args));
+        var _this8 = possibleConstructorReturn(this, (EnumType.__proto__ || Object.getPrototypeOf(EnumType)).call(this, args));
 
-        _this7._name = 'enum';
-        _this7._enums = [];
+        _this8._name = 'enum';
+        _this8._enums = [];
 
 
         var enums = args.enums;
@@ -464,14 +513,14 @@ var EnumType = function (_DataType7) {
         enums.map(function (en) {
             if (type !== (typeof en === 'undefined' ? 'undefined' : _typeof(en))) throw new Error('All enum values must be the same type, either strings or numbers');
         });
-        _this7._enums = enums;
+        _this8._enums = enums;
 
         if (args.default !== undefined) {
-            _this7._default = _this7.parse(args.default);
+            _this8._default = _this8.parse(args.default);
         }
 
-        _this7._value = _this7._default;
-        return _this7;
+        _this8._value = _this8._default;
+        return _this8;
     }
 
     createClass(EnumType, [{
@@ -500,6 +549,7 @@ var EnumType = function (_DataType7) {
 }(DataType);
 
 var Types = {
+    ObjectId: ObjectId,
     String: StringType,
     Number: NumberType,
     Boolean: BooleanType,
